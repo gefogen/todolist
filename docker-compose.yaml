@@ -26,12 +26,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-        - .:/code
-    healthcheck:
-      test:
-      interval: 3s
-      timeout: 3s
-      retries: 3
+      - ./.docker_env:/app/.env
     command: python manage.py migrate
 
   postgres:
