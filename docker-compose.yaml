@@ -15,7 +15,7 @@ services:
       postgres:
         condition: service_healthy
       migrations:
-        condition: service_complete_successfully
+        condition: service_completed_successfully
     volumes:
       - .:/code
 
