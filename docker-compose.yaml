@@ -15,7 +15,7 @@ services:
       postgres:
         condition: service_healthy
       migrations:
-        condition: service_completed_successfully
+        condition: service_healthy
     volumes:
       - .:/code
 
@@ -34,9 +34,9 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: todolist_postgres
+      POSTGRES_DB: postgres
     healthcheck:
-      test: pg_isready -U postgres -d todolist_postgres
+      test: pg_isready -U postgres -d postgres
       interval: 3s
       timeout: 3s
       retries: 3
