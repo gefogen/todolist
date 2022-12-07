@@ -15,7 +15,7 @@ services:
       postgres:
         condition: service_healthy
       migrations:
-        condition: service_healthy
+        condition: service_complete_successfully
     volumes:
       - .:/code
 
@@ -27,6 +27,11 @@ services:
         condition: service_healthy
     volumes:
         - .:/code
+    healthcheck:
+      test:
+      interval: 3s
+      timeout: 3s
+      retries: 3
     command: python manage.py migrate
 
   postgres:
