@@ -38,5 +38,5 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            cd todolist_1
+            cd todolist
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
