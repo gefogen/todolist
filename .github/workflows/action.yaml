@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: clone code
-        uses: workflows/checkout@v2
+        uses: actions/checkout@v2
       - name: docker build
         run: docker build -t gefogen/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
       - name: docker login
@@ -17,7 +17,7 @@ jobs:
     needs: build_and_push
     steps:
       - name: clone code
-        uses: workflows/checkout@v2
+        uses: actions/checkout@v2
       - name: render configs
         run: |
           mkdir todolist
