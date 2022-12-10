@@ -1,8 +1,44 @@
-version: "3.3"
+version: "3.9"
 
 services:
-
-  web:
-    image: gefogen/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+  front:
+    image: sermalenk/skypro-front:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     ports:
-      - 80:5000
+      - 8080:80
+    depends_on:
+      - api
+
+  api:
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    volumes:
+      - .:/code
+
+  migrations:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./.docker_env:/app/.env
+    command: python manage.py migrate
+
+  postgres:
+    image: postgres:14.6-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: pg_isready -U postgres -d postgres
+      interval: 3s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+
+volumes:
+  pg_data:
