@@ -4,7 +4,7 @@ services:
   front:
     image: sermalenk/skypro-front:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     ports:
-      - 8080:80
+      - 80:80
     depends_on:
       - api
 
@@ -15,14 +15,14 @@ services:
       migrations:
         condition: service_completed_successfully
     volumes:
-      - ./.docker_env:/app/.env
+      - ./.docker_env:/todolist/.env
 
   migrations:
     depends_on:
       postgres:
         condition: service_healthy
     volumes:
-      - ./.docker_env:/app/.env
+      - ./.docker_env:/todolist/.env
     command: python manage.py migrate
 
   postgres:
