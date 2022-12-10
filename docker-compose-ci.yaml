@@ -2,43 +2,41 @@ version: "3.9"
 
 services:
   front:
-    image: sermalenk/skypro-front:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    image: sermalenk/skypro-front:lesson-34
     ports:
       - 80:80
     depends_on:
       - api
 
   api:
+    image: gefogen/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
       postgres:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
     volumes:
-      - ./.docker_env:/todolist/.env
+      - ./.env:/todolist/.env
 
   migrations:
+    image: gefogen/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
       postgres:
         condition: service_healthy
     volumes:
-      - ./.docker_env:/todolist/.env
+      - ./.env:/todolist/.env
     command: python manage.py migrate
 
   postgres:
-    image: postgres:14.6-alpine
+    image: postgres:latest
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
     healthcheck:
-      test: pg_isready -U postgres -d postgres
-      interval: 3s
-      timeout: 3s
-      retries: 3
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
-      - pg_data:/var/lib/postgresql/data
-
-
-volumes:
-  pg_data:
+      - ./postgres-data:/var/lib/postgresql/data
