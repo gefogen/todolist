@@ -10,30 +10,22 @@ class CreateUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password_repeat = serializers.CharField(write_only=True)
 
-    class Meta:
-        model = User
-        read_only_fields = ("id",)
-        fields = (
-            "id",
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "password",
-            "password_repeat",
-        )
-
     def validate(self, attrs: dict):
-        password: str = attrs.get("password")
-        password_repeat: str = attrs.pop("password_repeat", None)
+        password = attrs.get("password")
+        password_repeat = attrs.pop("password_repeat", None)
+
         if password != password_repeat:
-            raise ValidationError("password and password_repeat is not equal")
+            raise ValidationError("password is not equal to password_repeat")
         return attrs
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         self.user = user
         return user
+
+    class Meta:
+        model = User
+        fields = ("id", "username", "first_name", "last_name", "email", "password", "password_repeat",)
 
 
 class LoginSerializer(serializers.Serializer):
@@ -44,6 +36,7 @@ class LoginSerializer(serializers.Serializer):
         username = attrs.get("username")
         password = attrs.get("password")
         user = authenticate(username=username, password=password)
+
         if not user:
             raise ValidationError("username or password is incorrect")
         attrs["user"] = user
