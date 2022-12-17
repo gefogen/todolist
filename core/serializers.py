@@ -70,6 +70,7 @@ class UpdatePasswordSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         old_password = attrs.get("old_password")
         user: User = self.instance
+
         if not user.check_password(old_password):
             raise ValidationError({"old_password": "field is incorrect"})
         return attrs
