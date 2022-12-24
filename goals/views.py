@@ -2,7 +2,8 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDe
 from rest_framework import permissions, filters
 from rest_framework.pagination import LimitOffsetPagination
 
-from goals.models import GoalCategory
+from goals.filters import GoalDateFilter
+from goals.models import GoalCategory, Goal
 from goals.serializers import GoalCreateSerializer, GoalCategorySerializer
 
 
