@@ -6,7 +6,7 @@ from rest_framework.pagination import LimitOffsetPagination
 
 from goals.filters import GoalDateFilter
 from goals.models import GoalCategory, Goal, GoalComment, Board
-from goals.permissions import BoardPermissions, GoalCategoryPermissions, GoalPermissions
+from goals.permissions import BoardPermissions, GoalCategoryPermissions, GoalPermissions, CommentPermissions
 from goals.serializers import GoalCreateSerializer, GoalCategorySerializer, GoalCategoryCreateSerializer, \
     GoalSerializer, CommentCreateSerializer, CommentSerializer, BoardCreateSerializer, BoardListSerializer, \
     BoardSerializer
@@ -142,10 +142,10 @@ class CommentCreateView(CreateAPIView):
 class CommentView(RetrieveUpdateDestroyAPIView):
     model = GoalComment
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, CommentPermissions]
 
     def get_queryset(self):
-        return GoalComment.objects.filter(user=self.request.user)
+        return GoalComment.objects.filter(goal__category__board__participants__user=self.request.user)
 
 
 class CommentListView(ListAPIView):
@@ -158,4 +158,4 @@ class CommentListView(ListAPIView):
     ordering = ["-id"]
 
     def get_queryset(self):
-        return GoalComment.objects.filter(user=self.request.user)
+        return GoalComment.objects.filter(goal__category__board__participants__user=self.request.user)
