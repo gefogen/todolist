@@ -8,6 +8,15 @@ services:
     depends_on:
       - api
 
+  bot:
+      image: gefogen/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+      depends_on:
+        postgres:
+          condition: service_healthy
+      volumes:
+        - ./.env:/todolist/.env
+      command: python manage.py runbot
+
   api:
     image: gefogen/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     ports:
