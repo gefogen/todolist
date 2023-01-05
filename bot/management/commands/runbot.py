@@ -125,7 +125,7 @@ class Command(BaseCommand):
         goal = Goal.objects.create(user=category.user, title=message.text, category=category)
         self.tg_client.send_message(message.chat.id,
                                     "Ура! Ваша цель создана:\n" +
-                                    f"http://yuzudev.ga/boards/{category.board.id}/goals?goal={goal.id}")
+                                    f"http://gefogen.ga/boards/{category.board.id}/goals?goal={goal.id}")
         self.states_storage[tg_user.tg_id] = States.idle
 
     def cancel(self, message: Message, tg_user: TgUser):
