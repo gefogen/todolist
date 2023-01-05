@@ -91,7 +91,8 @@ class Command(BaseCommand):
     def send_all_categories(self, message: Message, tg_user: TgUser):
         categories = GoalCategory.objects.filter(board__participants__user=tg_user.user, is_deleted=False)
         if categories.count() > 0:
-            msg = "Ваши категории\n" + "\n".join(f"#{cat.id} `{cat.title}`" for cat in categories)
+            msg = "Выберите категорию (введите название категории)\n" + \
+                  "\n".join(f"#{cat.id} `{cat.title}`" for cat in categories)
             self.tg_client.send_message(message.chat.id, msg, parse_mode='Markdown')
         else:
             self.tg_client.send_message(message.chat.id, "У вас нет категорий ( ・ˍ・)")
