@@ -1,0 +1,9 @@
+-r requirements.txt
+pre-commit
+black
+autoflake
+pyupgrade
+reorder-python-imports
+yesqa
+pytest-django
+pytest-factoryboy
